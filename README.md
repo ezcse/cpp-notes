@@ -54,7 +54,44 @@ A segmentation fault  occurs when a program tries to access memory it doesn't ha
      *ptr = 42; // Segmentation fault
      ```
 
+## Conversion between different Data Types
 
+The code showcases some basic operations like converting a character representing a digit into an integer and vice versa and converting integers and floating-point numbers to strings and back.
+
+```cpp 
+#include <iostream>
+using namespace std; 
+
+int main() {
+    
+    char cFive = '5'; // can store int values only from 0 to 9
+    int iFive = cFive - '0'; // Converts char '5' to its corresponding integer 5
+    cout << iFive << endl; // Outputs: 5
+    
+    char itoc = iFive + '0'; // Converts integer 5 back to its corresponding char '5'
+    cout << itoc << endl; // Outputs: 5
+    
+    cout << "==========" << endl;
+    
+    int num = 123;
+    string str = to_string(num); // Converts integer 123 to string "123"
+    cout << str << endl; // Outputs: 123
+    
+    int strToInt = stoi(str); // Converts string "123" back to integer 123
+    cout << strToInt << endl; // Outputs: 123
+    
+    cout << "==========" << endl;
+    
+    float fnum = 123.15;
+    str = to_string(fnum); // Converts float 123.15 to string "123.150000"
+    cout << str << endl; // Outputs: 123.150000
+    
+    float strToFloat = stof(str); // Converts string "123.150000" back to float 123.15
+    cout << strToFloat << endl; // Outputs: 123.15
+    
+    return 0;
+}
+```
 ## Size of a Class in C++
 
 Size of an empty class is 1. The compiler allocates 1 byte to an object of an empty class for its unique address identification. 
