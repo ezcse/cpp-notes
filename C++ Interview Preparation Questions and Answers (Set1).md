@@ -126,7 +126,59 @@ The Rule of Five extends the Rule of Three. In addition to the three mentioned f
 1. Move Constructor
 2. Move Assignment Operator
 
-This ensures that resources are correctly managed when objects are moved rather than copied.
+
+The Rule of Five ensures that your class is optimized for both copying and moving:
+
+- Copying: Requires deep copying to avoid issues with shared resources (e.g., shallow copies leading to double deletion).
+- Moving: Avoids the performance hit of copying by "stealing" resources from temporary objects, leaving them in a safe but empty state.
+  
+##### Example of Rule Of Five
+```cpp
+class MyClass {
+private:
+    int* data;
+public:
+    // Constructor
+    MyClass(int value) {
+        data = new int(value);
+    }
+
+    // Copy Constructor
+    MyClass(const MyClass& other) {
+        data = new int(*other.data);
+    }
+
+    // Copy Assignment Operator
+    MyClass& operator=(const MyClass& other) {
+        if (this != &other) {
+            delete data;
+            data = new int(*other.data);
+        }
+        return *this;
+    }
+
+    // Move Constructor (Move Semantics)
+    MyClass(MyClass&& other) noexcept {
+        data = other.data;  // Take ownership of other's data
+        other.data = nullptr;  // Leave the old object in a valid state
+    }
+
+    // Move Assignment Operator
+    MyClass& operator=(MyClass&& other) noexcept {
+        if (this != &other) {
+            delete data;  // Clean up old data
+            data = other.data;  // Take ownership of other's data
+            other.data = nullptr;  // Leave the old object in a valid state
+        }
+        return *this;
+    }
+
+    // Destructor
+    ~MyClass() {
+        delete data;
+    }
+};
+```
 
 ### 11. What is placement new?
 
