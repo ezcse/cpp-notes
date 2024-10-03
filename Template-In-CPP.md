@@ -90,8 +90,8 @@ int main() {
     MyClass<int> obj1(10);   // Works with int
     obj1.display();
     
-    MyClass<double> obj2(5.75);  // Works with double
-    obj2.display();
+    MyClass<double> * obj2 = new MyCalss<double>(5.75);  // Works with double
+    obj2->display();
     
     MyClass<string> obj3("Hello");  // Works with string
     obj3.display();
