@@ -38,6 +38,7 @@ public:
 class B {
 public:
     std::shared_ptr<A> a_ptr;
+    //std::weak_ptr<A> a_ptr; // doing this will fix the cyclic dependency 
     ~B() { std::cout << "B destroyed\n"; }
 };
 
