@@ -55,7 +55,7 @@ The **move constructor** and **move assignment operator** allow you to "move" re
 2. **Move Assignment Operator**:
    Similarly, in your move assignment operator, you should use `obj.p = nullptr;` to indicate that the resource has been moved from `obj`.
 
-Here’s the corrected version of your class with a proper move constructor and move assignment operator:
+Here’s the version of a class with a proper move constructor and move assignment operator:
 
 ### **Corrected Code:**
 ```cpp
