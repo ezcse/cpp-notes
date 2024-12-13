@@ -13,9 +13,9 @@ We will also explore their internal representation, especially the control block
 
 ## Table of Contents
 1. [Smart Pointer Overview](#smart-pointer-overview)
-2. [std::unique_ptr](#stduniqueptr)
-3. [std::shared_ptr](#stdsharedptr)
-4. [std::weak_ptr](#stdweakptr)
+2. [std::unique_ptr](#stdunique_ptr)
+3. [std::shared_ptr](#std::sharedptr)
+4. [std::weak_ptr](#std::weakptr)
 5. [Internal Representation of Smart Pointers](#internal-representation-of-smart-pointers)
 6. [Functions Supported by Smart Pointers](#functions-supported-by-smart-pointers)
 7. [Use Cases](#use-cases)
@@ -126,25 +126,104 @@ Control Block
 
 ## Functions Supported by Smart Pointers
 
-### Common Functions for Smart Pointers:
+### 1. Inbuilt Functions for Unique Pointers
 
-- **`get()`**: Returns the raw pointer managed by the smart pointer.
-- **`operator*()`**: Dereferences the stored pointer to access the object.
-- **`operator->()`**: Provides pointer-like access to the object’s members.
-- **`reset()`**: Releases the current object and optionally takes ownership of a new one.
-- **`swap()`**: Swaps the managed object with another smart pointer.
-- **`operator bool()`**: Checks if the smart pointer owns an object.
+| **Function**                  | **Description**                                                                 |
+|-------------------------------|---------------------------------------------------------------------------------|
+| `get()`                       | Returns the raw pointer managed by the `unique_ptr`.                            |
+| `release()`                   | Releases ownership of the managed object and returns the raw pointer.           |
+| `reset(ptr = nullptr)`        | Replaces the managed object or deletes the current object.                      |
+| `swap(other)`                 | Swaps the managed object with another `unique_ptr`.                             |
 
-### Additional Functions for `std::shared_ptr`:
+**Example:**
+```cpp
+#include <iostream>
+#include <memory>
 
-- **`use_count()`**: Returns the number of `shared_ptr`s managing the object.
-- **`unique()`**: Returns `true` if the `shared_ptr` is the only one managing the object.
-- **`lock()`**: (from `std::weak_ptr`) Attempts to get a `shared_ptr` from the `weak_ptr`.
+int main() {
+    std::unique_ptr<int> uptr = std::make_unique<int>(42);
 
-### Additional Function for `std::weak_ptr`:
+    std::cout << "Value: " << *uptr << "\n";
 
-- **`lock()`**: Returns a `std::shared_ptr` if the object is still alive. Returns an empty `shared_ptr` if the object has been destroyed.
-- **`expired()`**: Returns `true` if the managed object has been destroyed (i.e., the strong reference count is zero).
+    int* rawPtr = uptr.release(); // Release ownership
+    std::cout << "After release, raw pointer: " << *rawPtr << "\n";
+
+    delete rawPtr; // Manually delete the released raw pointer
+
+    uptr.reset(new int(55)); // Reset with a new object
+    std::cout << "After reset, value: " << *uptr << "\n";
+
+    return 0;
+}
+```
+
+
+### 2. Inbuilt Functions for Shared Pointers
+
+| **Function**                  | **Description**                                                                 |
+|-------------------------------|---------------------------------------------------------------------------------|
+| `get()`                       | Returns the raw pointer managed by the `shared_ptr`.                            |
+| `reset(ptr = nullptr)`        | Replaces the managed object or deletes the current object.                      |
+| `use_count()`                 | Returns the number of `shared_ptr` instances sharing ownership of the object.    |
+| `unique()`                    | Checks if only one `shared_ptr` owns the object.                                |
+| `swap(other)`                 | Swaps the managed object with another `shared_ptr`.                             |
+| `operator bool()`             | Checks if the `shared_ptr` is managing an object (not null).                    |
+
+**Example:**
+```cpp
+#include <iostream>
+#include <memory>
+
+int main() {
+    auto sptr1 = std::make_shared<int>(42);
+
+    std::cout << "Value: " << *sptr1 << ", Use count: " << sptr1.use_count() << "\n";
+
+    auto sptr2 = sptr1; // Shared ownership
+    std::cout << "After sharing, Use count: " << sptr1.use_count() << "\n";
+
+    sptr2.reset(); // Release ownership
+    std::cout << "After reset, Use count: " << sptr1.use_count() << "\n";
+
+    return 0;
+}
+```
+
+
+### 3. Inbuilt Functions for Weak Pointers
+
+| **Function**                  | **Description**                                                                 |
+|-------------------------------|---------------------------------------------------------------------------------|
+| `lock()`                      | Returns a `shared_ptr` if the object is still valid, otherwise returns `nullptr`.|
+| `expired()`                   | Checks whether the `shared_ptr` has been destroyed.                             |
+| `reset()`                     | Resets the `weak_ptr` to empty.                                                 |
+| `use_count()`                 | Returns the number of `shared_ptr` instances sharing ownership of the object.    |
+| `swap(other)`                 | Swaps the managed object with another `weak_ptr`.                               |
+
+**Example:**
+```cpp
+#include <iostream>
+#include <memory>
+
+int main() {
+    std::shared_ptr<int> sptr = std::make_shared<int>(42);
+    std::weak_ptr<int> wptr = sptr; // Weak reference
+
+    if (auto spt = wptr.lock()) { // Check if the object is valid
+        std::cout << "Value: " << *spt << ", Use count: " << wptr.use_count() << "\n";
+    } else {
+        std::cout << "Object is expired\n";
+    }
+
+    sptr.reset(); // Release shared ownership
+
+    if (wptr.expired()) {
+        std::cout << "Object is now expired\n";
+    }
+
+    return 0;
+}
+```
 
 ---
 
