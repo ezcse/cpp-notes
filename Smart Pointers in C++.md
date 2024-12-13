@@ -110,11 +110,11 @@ Both `std::shared_ptr` and `std::weak_ptr` share a common **control block** to m
 
 ```text
 Control Block
-+-------------------------------+
++--------------------------------+
 | strong_ref_count (shared_ptrs) |
 | weak_ref_count   (weak_ptrs)   |
 | Pointer to managed object      |
-+-------------------------------+
++--------------------------------+
 ```
 
 - **Strong reference count**: Incremented by `std::shared_ptr` instances. When this count reaches zero, the object is destroyed.
