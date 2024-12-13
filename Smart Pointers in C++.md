@@ -14,8 +14,8 @@ We will also explore their internal representation, especially the control block
 ## Table of Contents
 1. [Smart Pointer Overview](#smart-pointer-overview)
 2. [std::unique_ptr](#stdunique_ptr)
-3. [std::shared_ptr](#std::sharedptr)
-4. [std::weak_ptr](#std::weakptr)
+3. [std::shared_ptr](#stdshared_ptr)
+4. [std::weak_ptr](#stdweak_ptr)
 5. [Internal Representation of Smart Pointers](#internal-representation-of-smart-pointers)
 6. [Functions Supported by Smart Pointers](#functions-supported-by-smart-pointers)
 7. [Use Cases](#use-cases)
