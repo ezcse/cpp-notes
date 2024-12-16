@@ -43,11 +43,13 @@ public:
 };
 
 int main() {
-    std::shared_ptr<A> a = std::make_shared<A>();
-    std::shared_ptr<B> b = std::make_shared<B>();
-    
-    a->b_ptr = b;
-    b->a_ptr = a; // Cyclic dependency: A points to B, B points to A
+    {
+        std::shared_ptr<A> a = std::make_shared<A>();
+        std::shared_ptr<B> b = std::make_shared<B>();
+        
+        a->b_ptr = b;
+        b->a_ptr = a; // Cyclic dependency: A points to B, B points to A
+    }
     
     return 0;
 }
